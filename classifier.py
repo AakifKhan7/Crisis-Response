@@ -20,7 +20,7 @@ def safe_loader(path: str):
             img = Image.open(f)
             return img.convert("RGB")
     except (UnidentifiedImageError, OSError) as e:
-        print(f"⚠️ Skipping corrupted image: {path} ({e})")
+        print(f"Skipping corrupted image: {path} ({e})")
         return None
 
 
@@ -162,7 +162,7 @@ def main():
         if acc > best_acc:
             torch.save(model.state_dict(), "best_disaster_model.pth")
             best_acc = acc
-            print(f"✅ Saved new best model (Acc={best_acc:.4f})")
+            print(f" Saved new best model (Acc={best_acc:.4f})")
 
     # =========================
     # 8. Save final model
