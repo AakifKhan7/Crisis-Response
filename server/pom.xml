@@ -55,6 +55,17 @@
             <scope>test</scope>
         </dependency>
 
+		<dependency>
+    	    <groupId>jakarta.servlet</groupId>
+    	    <artifactId>jakarta.servlet-api</artifactId>
+    	    <scope>provided</scope>
+    	</dependency>
+	
+    	<!-- Jakarta Validation (Bean Validation for DTOs, @NotNull, @Email, etc.) -->
+    	<dependency>
+    	    <groupId>jakarta.validation</groupId>
+    	    <artifactId>jakarta.validation-api</artifactId>
+    	</dependency>
 		
 
 
