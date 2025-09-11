@@ -5,8 +5,6 @@ from flask import Flask, request, jsonify
 import io
 from transformers import pipeline
 
-from transformers import pipeline
-
 
 # ===== 1. Setup =====
 app = Flask(__name__)
@@ -23,7 +21,9 @@ nlp_classifier = pipeline(
 )
 
 # Candidate categories
-CATEGORIES = ["Medical", "Rescue", "Shelter", "Food"]
+CATEGORIES = ["Medical", "Rescue", "Shelter", "Food", "Fire"]
+SEVERITY = ["Critical", "Moderate", "Low"]
+
 
 # ===== 2. Define same transform used for validation =====
 val_transform = transforms.Compose([
@@ -58,9 +58,17 @@ def predict_image(image_bytes):
 # ===== 6. NLP Prediction Function =====
 def predict_text(text: str):
     result = nlp_classifier(text, candidate_labels=CATEGORIES)
-    top_label = result["labels"][0]
-    top_score = round(result["scores"][0] * 100, 2)
-    return top_label, top_score
+    type_label = result["labels"][0]
+    type_score = round(result["scores"][0] * 100, 2)
+
+    severity_result = nlp_classifier(text, candidate_labels=SEVERITY)
+    severity_label = severity_result["labels"][0]
+    severity_score = round(severity_result["scores"][0] * 100, 2)
+
+    return {
+            "type": {"label": type_label, "confidence": type_score},
+            "severity": {"label": severity_label, "confidence": severity_score}
+    }
 
 
 # ===== 7. Flask API route =====
@@ -93,11 +101,8 @@ def predict_text_api():
     
     try:
         text = data["text"]
-        pred_class, confidence = predict_text(text)
-        return jsonify({
-            "prediction": pred_class,
-            "confidence": confidence
-        })
+        result = predict_text(text)
+        return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
