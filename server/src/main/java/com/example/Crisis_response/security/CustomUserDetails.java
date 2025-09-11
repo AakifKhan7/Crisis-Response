@@ -51,7 +51,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !userAuth.isDeleted() && userAuth.getUser() != null && userAuth.getUser().isPhoneVerified();
+        // For now consider the account enabled as long as it's not deleted
+        // and the linked user exists. Phone verification will be handled separately.
+        return !userAuth.isDeleted() && userAuth.getUser() != null;
     }
 
     public UserAuthEntity getUserAuth() {
