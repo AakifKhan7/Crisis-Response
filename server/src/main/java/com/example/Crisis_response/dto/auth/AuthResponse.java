@@ -1,4 +1,4 @@
-package com.Aakifkhan.BazarBook.dto.auth;
+package com.example.Crisis_response.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

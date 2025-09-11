@@ -1,10 +1,16 @@
-package com.Aakifkhan.BazarBook.dto.auth;
+package com.example.Crisis_response.dto.auth;
 
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+
+
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
     @Email
     @NotBlank
