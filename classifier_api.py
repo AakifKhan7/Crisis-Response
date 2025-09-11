@@ -61,7 +61,7 @@ def predict_text(text: str):
     top_label = result["labels"][0]
     top_score = round(result["scores"][0] * 100, 2)
     return top_label, top_score
-    
+
 
 # ===== 7. Flask API route =====
 @app.route('/predict/image', methods=['POST'])
