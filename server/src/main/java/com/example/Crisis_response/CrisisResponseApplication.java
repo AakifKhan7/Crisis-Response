@@ -1,4 +1,4 @@
-package com.example.server;
+package com.example.Crisis_response;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
