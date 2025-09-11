@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
 
 
 import io.jsonwebtoken.security.Keys;
@@ -34,30 +35,30 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
-                .subject(userPrincipal.getUsername())
+                .setSubject(userPrincipal.getUsername())
                 .claim("uid", userPrincipal.getUserId())
-                .issuedAt(now)
-                .expiration(expiryDate)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
                 .signWith(secretKey)
                 .compact();
     }
 
     public String getEmailFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
 
         return claims.getSubject();
     }
 
     public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
         Object uidObj = claims.get("uid");
         if (uidObj == null) return null;
         if (uidObj instanceof Integer i) return i.longValue();
@@ -67,13 +68,12 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser()
-                .verifyWith(secretKey)
+            Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
-                .parseSignedClaims(authToken);
+                .parseClaimsJws(authToken);
             return true;
-        } catch (Exception ex) {
-            
+        } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }
     }
